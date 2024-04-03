@@ -1,3 +1,6 @@
+#啥玩意,根本没实现具体压缩
+
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -64,6 +67,7 @@ class Compressor:
         self.w = 1.0 / P - 1.0
         self.resetStats()
 
+    #把0-1划分成S份,划分保存在levelsValues中,不懂要干嘛单独写成函数
     def makeStandardDitheringFP32(self, D, levels, p=float("inf")):
         """ Make standart dithering schema with having uniform levels intervals inside [0.0, 1.0] and using "p" norm for normalizing vectors"""
         self.D = D
@@ -83,7 +87,7 @@ class Compressor:
 
         self.makeStandardDitheringFP32(D, levels, p = 2)
         # Lemma 3.1. from https://arxiv.org/pdf/1610.02132.pdf, page 5
-        self.w = min(D / (levels * levels), D ** 0.5 / levels)
+        self.w = min(D / (levels * levels), D ** 0.5 / levels)#D应该是维度,这是那论文里的方差界的一部分
 
     def makeTernGrad(self, D):
         """ Make Ternary Gradient compressor """
@@ -422,7 +426,7 @@ def initCompressor(compressorCmdLine, D):
     elif params[0] == "natural":
         c.makeNaturalCompressorFP32(D)
     elif params[0] == "qsgd":
-        L = int(params[1])
+        L = int(params[1])#划分levels
         c.makeQSGD_FP32(D, L)
     elif params[0] == "nat.dithering":
         L = int(params[1])
